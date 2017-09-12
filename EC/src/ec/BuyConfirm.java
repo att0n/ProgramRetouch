@@ -26,15 +26,25 @@ public class BuyConfirm extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		int addPrice;
+
 		try {
 			//選択された配送方法IDを取得
 			int inputDeliveryMethodId = Integer.parseInt(request.getParameter("delivery_method_id"));
+			if(inputDeliveryMethodId==1) {
+				addPrice = 500;
+			}else if(inputDeliveryMethodId==2) {
+				addPrice = 0;
+			}else {
+				addPrice = 200;
+			}
+
 			//選択されたIDをもとに配送方法Beansを取得
 			DeliveryMethodDataBeans userSelectDMB = DeliveryMethodDAO.getDeliveryMethodDataBeansByID(inputDeliveryMethodId);
 			//買い物かご
 			ArrayList<ItemDataBeans> cartIDBList = (ArrayList<ItemDataBeans>) session.getAttribute("cart");
 			//合計金額
-			int totalPrice = EcHelper.getTotalItemPrice(cartIDBList);
+			int totalPrice = EcHelper.getTotalItemPrice(cartIDBList)+addPrice;
 
 			BuyDataBeans bdb = new BuyDataBeans();
 			bdb.setUserId((int) session.getAttribute("userId"));

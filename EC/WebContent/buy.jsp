@@ -11,6 +11,7 @@
 <%
 	ArrayList<ItemDataBeans> cart = (ArrayList<ItemDataBeans>) session.getAttribute("cart");
 	ArrayList<DeliveryMethodDataBeans> dmdbList = (ArrayList<DeliveryMethodDataBeans>) request.getAttribute("dmdbList");
+	int price = 0;
 %>
 </head>
 <body>
@@ -26,7 +27,7 @@
 			<div class="col s12">
 				<div class="card grey lighten-5">
 					<div class="card-content">
-						<form action="BuyConfirm" method="POST">
+						<form action="BuyConfirm" method="POST" name="buyConfirm">
 							<div class="row">
 								<table class="bordered">
 									<thead>
@@ -39,6 +40,7 @@
 									<tbody>
 										<%
 											for (ItemDataBeans cartInItem : cart) {
+
 										%>
 										<tr>
 											<td class="center"><%=cartInItem.getName()%></td>
