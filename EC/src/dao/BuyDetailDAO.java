@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import base.DBManager;
 import beans.BuyDetailDataBeans;
@@ -114,7 +115,6 @@ public class BuyDetailDAO {
 				idb.setName(rs.getString("name"));
 				idb.setPrice(rs.getInt("price"));
 
-
 				buyDetailItemList.add(idb);
 			}
 
@@ -129,5 +129,50 @@ public class BuyDetailDAO {
 			}
 		}
 	}
+
+	/**
+     * 購入IDによる購入詳細情報検索
+     * @param buyId
+     * @return buyDetailItemList ArrayList<ItemDataBeans>
+     *             購入詳細情報のデータを持つJavaBeansのリスト
+     * @throws SQLException
+     */
+	public static List<ItemDataBeans> getBuyItemDetailListByBuyId(int buyId) throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		try {
+			con = DBManager.getConnection();
+
+			st = con.prepareStatement(
+					"SELECT * FROM t_buy_detail " +
+					"JOIN m_item " +
+					"ON t_buy_detail.item_id = m_item.id " +
+					"WHERE t_buy_detail.buy_id = ?");
+			st.setInt(1, buyId);
+
+			ResultSet rs = st.executeQuery();
+			List<ItemDataBeans> buyDetailItemList = new ArrayList<ItemDataBeans>();
+
+			while (rs.next()) {
+				ItemDataBeans idb = new ItemDataBeans();
+				idb.setId(rs.getInt("id"));
+				idb.setName(rs.getString("name"));
+				idb.setPrice(rs.getInt("price"));
+
+				buyDetailItemList.add(idb);
+				//System.out.println(rs.getString("name"));
+			}
+
+			return buyDetailItemList;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new SQLException(e);
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+	}
+
 
 }

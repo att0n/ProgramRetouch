@@ -48,10 +48,9 @@
 										}
 									%>
 									<tr>
-
 										<td class="center"><%=bdb.getDeliveryMethodName()%></td>
-										<td class="center"></td>
 										<td class="center"><%=bdb.getDeliveryMethodPrice()%>円</td>
+										<td class="center"><%=bdb.getTotalPrice()%>円</td>
 									</tr>
 									<tr>
 										<td class="center"></td>

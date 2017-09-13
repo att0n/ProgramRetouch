@@ -27,15 +27,19 @@ public class BuyConfirm extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		int addPrice;
+		String DeliveryMethodName;
 
 		try {
 			//選択された配送方法IDを取得
 			int inputDeliveryMethodId = Integer.parseInt(request.getParameter("delivery_method_id"));
 			if(inputDeliveryMethodId==1) {
+				DeliveryMethodName = "特急配送";
 				addPrice = 500;
 			}else if(inputDeliveryMethodId==2) {
+				DeliveryMethodName = "通常配送";
 				addPrice = 0;
 			}else {
+				DeliveryMethodName = "日時指定配送";
 				addPrice = 200;
 			}
 
@@ -43,15 +47,18 @@ public class BuyConfirm extends HttpServlet {
 			DeliveryMethodDataBeans userSelectDMB = DeliveryMethodDAO.getDeliveryMethodDataBeansByID(inputDeliveryMethodId);
 			//買い物かご
 			ArrayList<ItemDataBeans> cartIDBList = (ArrayList<ItemDataBeans>) session.getAttribute("cart");
+			System.out.println(cartIDBList.get(0).getName());
+
 			//合計金額
 			int totalPrice = EcHelper.getTotalItemPrice(cartIDBList)+addPrice;
 
 			BuyDataBeans bdb = new BuyDataBeans();
+
 			bdb.setUserId((int) session.getAttribute("userId"));
 			bdb.setTotalPrice(totalPrice);
 			bdb.setDelivertMethodId(userSelectDMB.getId());
-
-
+			bdb.setDeliveryMethodName(DeliveryMethodName);
+			bdb.setDeliveryMethodPrice(addPrice);
 
 			//購入確定で利用
 			session.setAttribute("bdb", bdb);
